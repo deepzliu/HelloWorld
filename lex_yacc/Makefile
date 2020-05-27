@@ -52,3 +52,8 @@ heater:
 	lex -o $@.yy.c $@.lex
 	yacc -dtv $@.yy
 	gcc $@.yy.c y.tab.c -o $@.out
+
+custom_io:
+	lex -o $@.yy.c $@.lex
+	yacc -dtv $@.yy
+	gcc $@.yy.c y.tab.c custom_io.c -o $@.out
