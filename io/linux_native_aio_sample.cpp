@@ -1,5 +1,6 @@
-#include<libaio.h>
 #include<stdlib.h>
+#include<string.h>
+#include<libaio.h>
 #include<errno.h>
 #include<stdio.h>
 #include<unistd.h>
@@ -10,7 +11,7 @@
 
 int main()
 {
-    io_context_t context ;
+    io_context_t context;
     unsigned  nr_events = 10;
 
     struct iocb io[2], *p[2]={&io[0], &io[1]};
@@ -18,7 +19,8 @@ int main()
     struct timespec timeout;
     char* wbuf = 0;
     char* rbuf = 0;
-    int wbuflen = 512*1024*1024;
+    //int wbuflen = 512*1024*1024;
+    int wbuflen = 1024*1024;
     int rbuflen = wbuflen+1;
     int ret = 0;
     int comp_num = 0;
@@ -34,7 +36,6 @@ int main()
         return 0;
     }   
 
-
     memset(&context, 0, sizeof(io_context_t));
     if( 0 != io_setup(nr_events, &context) ){
 
@@ -42,17 +43,16 @@ int main()
     }   
 
     io_prep_pwrite(&io[0], fd, wbuf, wbuflen, 0); 
-
     io_prep_pread(&io[1], fd, rbuf, rbuflen-1, 0); 
 
+    if((ret = io_submit(context,2,p)) != 2)
+    {
+        printf("io_submit error:%d\n", ret);
+        io_destroy(context);
+        return -1;
+    }
 
-    if((ret = io_submit(context,2,p)) != 2){ 
-                 printf("io_submit error:%d\n", ret);    
-                 io_destroy(context);
-                 return -1; 
-       }   
-
-       while(1){
+    while(1){
         timeout.tv_sec = 0;
         timeout.tv_nsec = 10000000;
         ret = io_getevents(context,2,2,e,&timeout);
@@ -62,7 +62,6 @@ int main()
             printf("io_getevents error:%d\n", ret);
             break;
         }   
-
 
         if(ret > 0)
         {   
