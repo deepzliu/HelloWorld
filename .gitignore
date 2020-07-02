@@ -19,3 +19,4 @@ y.tab.c
 y.tab.h
 *.o
 *.output
+.DS_Store

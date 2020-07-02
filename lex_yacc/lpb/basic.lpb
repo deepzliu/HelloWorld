@@ -1,0 +1,12 @@
+/* basic.lp */
+
+package lpb.basic;
+
+enum EN_FLAGS
+{
+    EN_NONE    = 0,
+    EN_START   = 1,
+    EN_RUNNING = 2,
+    EN_SLEEP   = 3,
+    EN_END     = 4,
+};

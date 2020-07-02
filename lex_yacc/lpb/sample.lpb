@@ -1,0 +1,54 @@
+/* sample.lpb */
+
+package lpb.sample;
+import "basic.lpb"
+
+enum EN_VERSION
+{
+    EN_V1   = 1,
+    EN_V2   = 2,
+    EN_V3   = 3,
+};
+
+message sub_msg
+{
+	required bool is_right;
+	optional int32 flags;
+};
+
+// custom_msg
+message custom_msg
+{
+    required int32 id;
+    required char* name;
+    required int8 version;
+    assisted int32 flags;
+    if ( version > EN_V1 ) { // condition
+        required int64 seq_id;
+    }else{
+        required int32 seq_id;
+    }
+    if ( flags & lpb::basic::EN_SLEEP ) {
+        required int32 timeout;
+        if ( version > EN_V1 ) { // condition
+            optional int64 timeout;
+        }else{
+            optional int32 timeout;
+        }
+    }
+    optional int32 info_len;
+    optional lvector<lstring> info(info_len);
+    optional map<int32, sub_msg> map_info;
+};
+
+/* basic_page: 
+        构造函数设置大小
+        set_size(), size()
+        fix buffser 
+    应该不需要支持条件
+*/
+page custom_page
+{
+    // TODO
+};
+
