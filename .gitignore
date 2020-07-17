@@ -20,3 +20,4 @@ y.tab.h
 *.o
 *.output
 .DS_Store
+tour_of_go/tour_of_go
